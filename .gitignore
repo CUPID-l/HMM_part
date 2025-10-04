@@ -1,0 +1,409 @@
+# ============================================================================
+# HMM Market Regime Detection - Git Ignore Configuration
+# ============================================================================
+
+# ============================================================================
+# Python
+# ============================================================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ============================================================================
+# Project-Specific: Data Files
+# ============================================================================
+# Raw market data (large files)
+data/raw/**/*.csv
+data/raw/**/*.parquet
+data/raw/**/*.json
+data/raw/**/*.feather
+data/raw/**/*.h5
+data/raw/**/*.hdf5
+
+# Processed data
+data/processed/**/*.csv
+data/processed/**/*.parquet
+data/processed/**/*.json
+data/processed/**/*.feather
+
+# Keep directory structure but ignore contents
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Temporary data files
+data/tmp/
+data/temp/
+*.tmp
+
+# ============================================================================
+# Project-Specific: Model Files
+# ============================================================================
+# Trained models (can be large)
+models/*.joblib
+models/*.pkl
+models/*.pickle
+models/*.h5
+models/*.pt
+models/*.pth
+
+# Keep demo model for testing
+!models/demo_model.joblib
+
+# Model checkpoints
+models/checkpoints/
+*.ckpt
+
+# Keep directory structure
+!models/.gitkeep
+
+# ============================================================================
+# Project-Specific: Results & Outputs
+# ============================================================================
+# Prediction outputs
+predictions_*.json
+backtest_*.json
+!predictions.json  # Keep example/template
+
+# Result files
+results/**/*.csv
+results/**/*.json
+results/**/*.png
+results/**/*.pdf
+results/**/*.html
+
+# Keep directory structure
+!results/.gitkeep
+
+# Logs
+logs/*.log
+logs/**/*.log
+*.log
+!logs/.gitkeep
+
+# System logs
+hmm_system.log
+*.log.*
+
+# ============================================================================
+# Project-Specific: Visualizations
+# ============================================================================
+# Generated plots and figures
+figures/**/*.png
+figures/**/*.jpg
+figures/**/*.jpeg
+figures/**/*.pdf
+figures/**/*.svg
+
+plots/
+visualization_output/
+
+# ============================================================================
+# IDE and Editor Specific
+# ============================================================================
+# VS Code
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================================================
+# Operating System
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# Configuration & Secrets
+# ============================================================================
+# API keys and secrets
+.env
+.env.local
+.env.*.local
+secrets.yaml
+secrets.json
+api_keys.txt
+credentials.json
+
+# User-specific config (keep default.yaml in config/)
+config/user_*.yaml
+config/local_*.yaml
+config/production.yaml
+
+# ============================================================================
+# Documentation
+# ============================================================================
+# Build documentation
+docs/_build/
+docs/.doctrees/
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+*.synctex.gz
+
+# ============================================================================
+# Backup Files
+# ============================================================================
+*.bak
+*.backup
+*.old
+*_backup.*
+*_old.*
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# ============================================================================
+# Archive Files (avoid accidentally committing large archives)
+# ============================================================================
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# ============================================================================
+# Notebook Outputs (optional - remove if you want to version outputs)
+# ============================================================================
+# Uncomment to ignore all notebook outputs
+# *.ipynb
+
+# Keep evaluation notebook but strip outputs before commit
+# Use: jupyter nbconvert --clear-output --inplace notebook.ipynb
+
+# ============================================================================
+# Testing
+# ============================================================================
+.tox/
+.pytest_cache/
+.coverage
+htmlcov/
+test-results/
+test-output/
+
+# ============================================================================
+# Project-Specific: Workspace Files
+# ============================================================================
+# Workflow summaries
+workflow_summary_*.json
+
+# Validation reports
+validation_report_*.txt
+
+# ============================================================================
+# Database
+# ============================================================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================================================
+# Keep These Files/Folders
+# ============================================================================
+# Keep directory structure with .gitkeep files
+!.gitkeep
+
+# Keep configuration templates
+!config/default.yaml
+!config/README.md
+
+# Keep example files
+!data/example_data.csv
+
+# Keep documentation
+!README.md
+!QUICKSTART*.md
+!MIGRATION_GUIDE.md
+!IMPLEMENTATION*.md
+!PRIORITY*.md
+
+# Keep requirements
+!requirements.txt
+!setup.py
+!pytest.ini
+
+# Keep test files
+!tests/
+!test_*.py
+
+# Keep source code
+!src/
+!hmm_cli.py
+!doit.py
+!validate_system.py
+!run_tests.py

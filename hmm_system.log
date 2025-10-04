@@ -7195,3 +7195,13 @@ Trying to import the above resulted in these errors:
 2025-10-04 23:32:43,438 - INFO - Final feature matrix shape: (4980, 5)
 2025-10-04 23:32:43,991 - INFO - Backtest complete. Total return: -10.38%, Sharpe: -12.264
 2025-10-04 23:32:44,060 - ERROR - Backtest failed: keys must be str, int, float, bool or None, not Timestamp
+2025-10-05 01:52:41,288 - INFO - Using hmmlearn backend for HMM
+2025-10-05 02:02:00,049 - INFO - Computing technical features
+2025-10-05 02:02:00,115 - INFO - Features computed. Dropped 20 rows with NaN
+2025-10-05 02:02:00,116 - INFO - Final feature matrix shape: (4980, 5)
+2025-10-05 02:02:25,583 - INFO - Computing technical features
+2025-10-05 02:02:25,610 - INFO - Features computed. Dropped 20 rows with NaN
+2025-10-05 02:02:25,612 - INFO - Final feature matrix shape: (4980, 5)
+2025-10-05 02:05:39,466 - INFO - Computing technical features
+2025-10-05 02:05:39,484 - INFO - Features computed. Dropped 20 rows with NaN
+2025-10-05 02:05:39,485 - INFO - Final feature matrix shape: (4980, 5)
