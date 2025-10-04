@@ -1,0 +1,240 @@
+# HMM Market Regime Detection - Configuration File
+# 
+# This file controls all aspects of the system's behavior.
+# Edit values below and run with: python hmm_cli.py --config config.yaml
+
+# =============================================================================
+# Data Configuration
+# =============================================================================
+data:
+  # Symbols to fetch and train models for
+  symbols:
+    - EUR/USD
+    - USD/JPY
+    - GBP/USD
+  
+  # Data source: 'alpha_vantage' or 'file'
+  source: alpha_vantage
+  
+  # API key (can also be set via ALPHA_VANTAGE_API_KEY environment variable)
+  api_key: ${ALPHA_VANTAGE_API_KEY}
+  
+  # Update frequency for data fetching
+  update_frequency: daily
+  
+  # Data storage paths
+  raw_data_dir: data/raw
+  processed_data_dir: data/processed
+
+# =============================================================================
+# Feature Engineering Configuration
+# =============================================================================
+features:
+  # RSI (Relative Strength Index) parameters
+  rsi_period: 14
+  
+  # Volatility calculation window
+  volatility_window: 20
+  
+  # MACD (Moving Average Convergence Divergence) parameters
+  macd_short: 12
+  macd_long: 26
+  macd_signal: 9
+  
+  # Bollinger Bands parameters
+  bb_window: 20
+  bb_k: 2  # Number of standard deviations
+  
+  # Feature scaling method: 'standard' or 'minmax'
+  scaling_method: standard
+
+# =============================================================================
+# HMM Model Configuration
+# =============================================================================
+model:
+  # Number of hidden states (regimes)
+  # Typical: 2 (Bull/Bear), 3 (Bull/Bear/Sideways), 4-5 (more granular)
+  n_states: 3
+  
+  # Training window size (number of periods)
+  # 252 = ~1 year of daily data
+  window_size: 252
+  
+  # Step size for rolling windows (number of periods)
+  # 21 = ~1 month of daily data
+  step_size: 21
+  
+  # Maximum EM algorithm iterations
+  max_iter: 200
+  
+  # Covariance matrix type: 'full', 'diag', or 'tied'
+  # 'full' = most flexible, captures feature correlations
+  # 'diag' = faster, assumes independent features
+  covariance_type: full
+  
+  # Random seed for reproducibility
+  random_state: 42
+  
+  # Convergence tolerance
+  tolerance: 1e-4
+  
+  # Model output directory
+  output_dir: models
+
+# =============================================================================
+# Model Selection Configuration
+# =============================================================================
+model_selection:
+  # Enable automatic model selection (find best n_states)
+  enabled: false
+  
+  # Range of n_states to test
+  n_states_range: [2, 3, 4, 5]
+  
+  # Number of random initializations per n_states
+  n_trials: 5
+  
+  # Selection criterion: 'aic' or 'bic'
+  # BIC penalizes complexity more (typically preferred)
+  criterion: bic
+
+# =============================================================================
+# Training Configuration
+# =============================================================================
+training:
+  # Enable parallel training for multiple symbols
+  parallel: false
+  
+  # Maximum number of parallel workers
+  # Set to number of CPU cores for best performance
+  max_workers: 4
+  
+  # Minimum training data size (in periods)
+  min_train_size: 100
+  
+  # Validation window size (in periods)
+  validation_size: 21
+  
+  # Data quality checks
+  data_quality:
+    enabled: true
+    max_gap_days: 7
+    max_daily_change: 0.20  # 20% max daily price movement
+    
+  # Feature validation
+  feature_validation:
+    enabled: true
+    check_nan: true
+    check_inf: true
+
+# =============================================================================
+# Inference Configuration
+# =============================================================================
+inference:
+  # Prediction method: 'viterbi' or 'posterior'
+  # 'viterbi' = most likely path
+  # 'posterior' = probability distribution (recommended)
+  prediction_method: posterior
+  
+  # Confidence threshold for regime detection
+  # If max posterior < threshold, flag as uncertain
+  confidence_threshold: 0.60
+  
+  # Next-step probability calculation method
+  # 'viterbi' = from most likely state
+  # 'posterior' = weighted by posterior distribution (recommended)
+  next_step_method: posterior
+
+# =============================================================================
+# Backtesting Configuration
+# =============================================================================
+backtesting:
+  # Strategy type: 'simple', 'momentum', or 'adaptive'
+  strategy: simple
+  
+  # Initial capital for simulation
+  initial_capital: 100000
+  
+  # Transaction cost (as fraction of trade value)
+  # 0.0001 = 1 basis point
+  transaction_cost: 0.0001
+  
+  # Slippage (as fraction of price)
+  slippage: 0.0001
+  
+  # Allow short positions
+  allow_short: false
+  
+  # Position sizing
+  position_sizing:
+    method: fixed  # 'fixed' or 'regime_weighted'
+    fixed_size: 1.0  # 1.0 = 100% of capital
+  
+  # Performance metrics to compute
+  metrics:
+    - total_return
+    - cagr
+    - sharpe_ratio
+    - max_drawdown
+    - calmar_ratio
+    - win_rate
+    - profit_factor
+  
+  # Output directory for backtest results
+  output_dir: results
+
+# =============================================================================
+# Monitoring Configuration
+# =============================================================================
+monitoring:
+  # Enable performance monitoring
+  enabled: false
+  
+  # Metrics log file
+  metrics_file: logs/model_metrics.jsonl
+  
+  # Drift detection configuration
+  drift_detection:
+    enabled: false
+    window_size: 100  # Number of predictions to compare
+    confidence_drop_threshold: 0.10  # 10% drop triggers alert
+  
+  # Accuracy tracking
+  accuracy:
+    enabled: false
+    lookback_days: 30
+
+# =============================================================================
+# Logging Configuration
+# =============================================================================
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+  
+  # Log file path
+  file: logs/hmm_system.log
+  
+  # Log format
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Console output
+  console: true
+  
+  # File output
+  file_output: true
+
+# =============================================================================
+# Advanced Settings
+# =============================================================================
+advanced:
+  # Cache directory for intermediate results
+  cache_dir: .cache
+  
+  # Enable caching
+  use_cache: false
+  
+  # Numerical precision
+  float_precision: float64
+  
+  # Memory optimization
+  low_memory_mode: false

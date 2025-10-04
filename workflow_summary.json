@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-10-04T23:31:28.113808",
+  "symbols": [
+    "EUR/USD"
+  ],
+  "parameters": {
+    "window_size": 252,
+    "step_size": 21,
+    "n_states": 3
+  },
+  "steps_completed": [
+    "ingest",
+    "train_EUR_USD",
+    "predict_EUR_USD"
+  ],
+  "predictions": {
+    "EUR/USD": "predictions_EUR_USD.json"
+  },
+  "backtests": {
+    "EUR/USD": {}
+  }
+}
