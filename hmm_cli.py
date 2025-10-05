@@ -20,13 +20,13 @@ Available Commands:
   ingest      Fetch market data from Alpha Vantage API
   train       Train HMM models with rolling windows
   predict     Make regime predictions on new data
-  backtest    Run strategy backtests
+  validate    Validate HMM predictions against historical data
   
 Examples:
   python hmm_cli.py ingest --symbols EUR/USD USD/JPY
   python hmm_cli.py train --symbol EUR/USD --window-size 252
   python hmm_cli.py predict --symbol EUR/USD --data-file data.csv
-  python hmm_cli.py backtest --model models/latest.joblib --data-file data.csv
+  python hmm_cli.py validate --model-path models/latest.joblib --data-file data.csv
         """
     )
     
@@ -60,15 +60,13 @@ Examples:
                                help='Data file for prediction')
     predict_parser.add_argument('--output-file', help='Save predictions to file')
     
-    # Backtest command  
-    backtest_parser = subparsers.add_parser('backtest', help='Run backtests')
-    backtest_parser.add_argument('--model-path', required=True,
+    # Validate command  
+    validate_parser = subparsers.add_parser('validate', help='Validate predictions')
+    validate_parser.add_argument('--model-path', required=True,
                                 help='Path to trained model')
-    backtest_parser.add_argument('--data-file', required=True,
-                                help='Data file for backtesting')
-    backtest_parser.add_argument('--strategy', choices=['simple', 'momentum', 'adaptive'],
-                                default='simple', help='Strategy type')
-    backtest_parser.add_argument('--output-file', help='Save results to file')
+    validate_parser.add_argument('--data-file', required=True,
+                                help='Data file for validation')
+    validate_parser.add_argument('--output-file', help='Save validation results to file')
     
     args = parser.parse_args()
     
@@ -109,17 +107,16 @@ Examples:
                 sys.argv.extend(['--output-file', args.output_file])
             inference_main()
             
-        elif args.command == 'backtest':
-            from backtest import main as backtest_main
+        elif args.command == 'validate':
+            from validate_predictions import main as validate_main
             sys.argv = [
-                'backtest.py',
+                'validate_predictions.py',
                 '--model-path', args.model_path,
-                '--data-file', args.data_file,
-                '--strategy', args.strategy
+                '--data-file', args.data_file
             ]
             if args.output_file:
                 sys.argv.extend(['--output-file', args.output_file])
-            backtest_main()
+            validate_main()
             
     except Exception as e:
         print(f"Error executing {args.command}: {e}")

@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-10-05T16:51:59.341619",
+  "model_path": "models\\hmm_EUR_USD_3_win252_end20250901.joblib",
+  "data_path": "data\\raw\\EUR_USD\\EUR_USD_20251005T160032Z.parquet",
+  "model_info": {
+    "n_states": 3,
+    "state_labels": {
+      "1": "Bear",
+      "2": "Bull",
+      "0": "Sideways"
+    },
+    "feature_names": [
+      "log_return",
+      "volatility",
+      "RSI",
+      "MACD",
+      "BBW"
+    ]
+  },
+  "state_statistics": {
+    "state_distribution": {
+      "Sideways": 2592,
+      "Bear": 1074,
+      "Bull": 1314
+    },
+    "state_frequencies": {
+      "Sideways": 0.5204819277108433,
+      "Bear": 0.21566265060240963,
+      "Bull": 0.26385542168674697
+    },
+    "mean_confidence": 0.9669769397730675,
+    "median_confidence": 0.9999832672055399,
+    "min_confidence": 0.45132077418304284,
+    "max_confidence": 1.0,
+    "total_transitions": 254,
+    "transition_rate": 0.05100401606425703,
+    "state_durations": {
+      "Bear": {
+        "mean_duration": 10.959183673469388,
+        "max_duration": 31,
+        "min_duration": 2
+      },
+      "Bull": {
+        "mean_duration": 25.26923076923077,
+        "max_duration": 222,
+        "min_duration": 3
+      },
+      "Sideways": {
+        "mean_duration": 24.685714285714287,
+        "max_duration": 175,
+        "min_duration": 2
+      }
+    }
+  },
+  "validation_results": {
+    "regime_performance": {
+      "Bear": {
+        "mean_return": -0.0006801835734942713,
+        "std_return": 0.004441116822070699,
+        "median_return": -0.0005188036477085101,
+        "positive_days": 474,
+        "negative_days": 596,
+        "win_rate": 0.441340782122905,
+        "total_days": 1074
+      },
+      "Bull": {
+        "mean_return": 2.9170756563303864e-05,
+        "std_return": 0.007821722592366964,
+        "median_return": 0.00021882375493176287,
+        "positive_days": 674,
+        "negative_days": 636,
+        "win_rate": 0.512937595129376,
+        "total_days": 1314
+      },
+      "Sideways": {
+        "mean_return": 0.0002626664367774842,
+        "std_return": 0.004511831358864338,
+        "median_return": 0.0002825399429449149,
+        "positive_days": 1363,
+        "negative_days": 1211,
+        "win_rate": 0.526051717483597,
+        "total_days": 2591
+      }
+    },
+    "regime_consistency": 0.6666666666666666,
+    "direction_accuracy": {
+      "Bear": 0.5139664804469274,
+      "Bull": 0.5091324200913242
+    },
+    "total_samples": 4980,
+    "date_range": {
+      "start": "2006-09-01 00:00:00",
+      "end": "2025-10-03 00:00:00"
+    }
+  }
+}

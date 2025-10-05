@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-04T23:31:28.113808",
+  "timestamp": "2025-10-05T16:10:47.686883",
   "symbols": [
     "EUR/USD"
   ],
@@ -11,12 +11,19 @@
   "steps_completed": [
     "ingest",
     "train_EUR_USD",
-    "predict_EUR_USD"
+    "predict_EUR_USD",
+    "backtest_EUR_USD_simple",
+    "backtest_EUR_USD_momentum",
+    "backtest_EUR_USD_adaptive"
   ],
   "predictions": {
     "EUR/USD": "predictions_EUR_USD.json"
   },
   "backtests": {
-    "EUR/USD": {}
+    "EUR/USD": {
+      "simple": "backtest_EUR_USD_simple.json",
+      "momentum": "backtest_EUR_USD_momentum.json",
+      "adaptive": "backtest_EUR_USD_adaptive.json"
+    }
   }
 }

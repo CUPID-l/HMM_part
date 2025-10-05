@@ -645,7 +645,19 @@ def run_backtest_from_config(
         start_date=pd.to_datetime(strategy_config.get('start_date')) if strategy_config.get('start_date') else None,
         end_date=pd.to_datetime(strategy_config.get('end_date')) if strategy_config.get('end_date') else None
     )
-    
+    def convert_timestamps(obj):
+        """Recursively convert Timestamps to strings"""
+        if isinstance(obj, dict):
+            return {str(k) if isinstance(k, pd.Timestamp) else k: convert_timestamps(v) 
+                    for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_timestamps(item) for item in obj]
+        elif isinstance(obj, pd.Timestamp):
+            return obj.isoformat()
+        elif isinstance(obj, (pd.Series, np.ndarray)):
+            return obj.tolist()
+        return obj
+    results = convert_timestamps(results) # convert tiemestamps to strings for JSON serialization
     # Save results
     if output_file:
         import json

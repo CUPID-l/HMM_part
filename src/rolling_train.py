@@ -226,6 +226,10 @@ class RollingHMMTrainer:
     ) -> str:
         """Save complete model artifact with all metadata."""
         
+        # Extract state labels from evaluation
+        state_labels = evaluation.get('state_labels', {})
+        feature_names = train_metadata.get('feature_names', ['log_return', 'volatility', 'RSI', 'MACD', 'BBW'])
+        
         # Create comprehensive metadata
         artifact_metadata = {
             # Training configuration
@@ -254,10 +258,13 @@ class RollingHMMTrainer:
         filename = f"hmm_{symbol_formatted}_{self.n_states}_win{self.window_size}_end{date_str}.joblib"
         filepath = self.models_dir / filename
         
-        # Save complete artifact
+        # ✅ Save complete artifact with state_labels at top level
         artifact = {
             'model': model,
             'scaler': scaler,
+            'state_labels': state_labels,      # ✅ Now at top level!
+            'regime_labels': state_labels,      # ✅ Alias for backwards compatibility
+            'feature_names': feature_names,     # ✅ Feature names at top level
             'metadata': artifact_metadata,
             'created_at': datetime.now().isoformat(),
             'version': '1.0'
@@ -266,6 +273,7 @@ class RollingHMMTrainer:
         joblib.dump(artifact, filepath)
         
         logger.info(f"Saved model artifact: {filepath}")
+        logger.info(f"State labels: {state_labels}")
         return str(filepath)
     
     def train_rolling_windows(

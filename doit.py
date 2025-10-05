@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Automated HMM Market Regime Detection Workflow
-Streamlines the entire process: ingest → train → predict → backtest
+Streamlines the entire process: ingest → train → predict → validate
 """
 
 import os
@@ -156,7 +156,7 @@ def select_symbols() -> List[str]:
 
 
 def confirm_parameters(symbols: List[str], window_size: int, step_size: int, 
-                       n_states: int, strategies: List[str]) -> bool:
+                       n_states: int) -> bool:
     """
     Display parameters and ask for confirmation.
     
@@ -174,23 +174,18 @@ def confirm_parameters(symbols: List[str], window_size: int, step_size: int,
     print(f"  • Step Size:    {step_size} days (~{step_size/21:.1f} months)")
     print(f"  • HMM States:   {n_states} (Bull/Bear/Sideways)")
     
-    print(f"\n{Colors.BOLD}Backtest Strategies:{Colors.ENDC}")
-    for strategy in strategies:
-        print(f"  • {strategy.capitalize()}")
-    
     print(f"\n{Colors.BOLD}Workflow Steps:{Colors.ENDC}")
     print("  1. Ingest market data from Alpha Vantage API")
     print("  2. Train HMM models with rolling windows")
     print("  3. Generate regime predictions")
-    print("  4. Run backtests for each strategy")
-    print("  5. Save all results to JSON files")
+    print("  4. Validate HMM predictions against historical data")
     
     response = input(f"\n{Colors.WARNING}Proceed with this configuration? (Y/n): {Colors.ENDC}").strip().lower()
     return response in ['', 'y', 'yes']
 
 
 def run_workflow(symbols: List[str], window_size: int = 252, step_size: int = 21,
-                 n_states: int = 3, strategies: List[str] = None,
+                 n_states: int = 3,
                  skip_ingest: bool = False, skip_train: bool = False) -> dict:
     """
     Run the complete HMM workflow.
@@ -200,15 +195,12 @@ def run_workflow(symbols: List[str], window_size: int = 252, step_size: int = 21
         window_size: Training window size in days
         step_size: Rolling window step size in days
         n_states: Number of HMM states
-        strategies: List of backtest strategies
         skip_ingest: Skip data ingestion step
         skip_train: Skip model training step
         
     Returns:
         Dictionary with workflow results
     """
-    if strategies is None:
-        strategies = ['simple', 'momentum', 'adaptive']
     
     results = {
         'timestamp': datetime.now().isoformat(),
@@ -220,7 +212,7 @@ def run_workflow(symbols: List[str], window_size: int = 252, step_size: int = 21
         },
         'steps_completed': [],
         'predictions': {},
-        'backtests': {}
+        'validations': {}
     }
     
     print_header("🚀 Starting HMM Workflow")
@@ -306,33 +298,29 @@ def run_workflow(symbols: List[str], window_size: int = 252, step_size: int = 21
                 print_warning(f"Could not read predictions: {e}")
         print()
         
-        # Step 4: Run backtests
-        results['backtests'][symbol] = {}
-        
-        for j, strategy in enumerate(strategies, 1):
-            print_step(4, f"Running Backtest for {symbol} - {strategy.capitalize()} Strategy ({j}/{len(strategies)})")
-            backtest_file = f"backtest_{symbol_clean}_{strategy}.json"
-            cmd = [
-                'python', 'hmm_cli.py', 'backtest',
-                '--model-path', str(latest_model),
-                '--data-file', str(latest_data),
-                '--strategy', strategy,
-                '--output-file', backtest_file
-            ]
-            if run_command(cmd, f"{strategy.capitalize()} backtest for {symbol}"):
-                results['steps_completed'].append(f'backtest_{symbol_clean}_{strategy}')
-                results['backtests'][symbol][strategy] = backtest_file
-                
-                # Load and display backtest summary
-                try:
-                    with open(backtest_file, 'r') as f:
-                        bt_data = json.load(f)
-                        total_return = bt_data['performance']['total_return']
-                        sharpe = bt_data['performance']['sharpe_ratio']
-                        print_success(f"Total Return: {total_return:+.2f}% | Sharpe: {sharpe:.2f}")
-                except Exception as e:
-                    print_warning(f"Could not read backtest results: {e}")
-            print()
+        # Step 4: Validate predictions
+        print_step(4, f"Validating Predictions for {symbol}")
+        validation_file = f"validation_{symbol_clean}.json"
+        cmd = [
+            'python', 'hmm_cli.py', 'validate',
+            '--model-path', str(latest_model),
+            '--data-file', str(latest_data),
+            '--output-file', validation_file
+        ]
+        if run_command(cmd, f"Validation for {symbol}"):
+            results['steps_completed'].append(f'validate_{symbol_clean}')
+            results['validations'][symbol] = validation_file
+            
+            # Load and display validation summary
+            try:
+                with open(validation_file, 'r') as f:
+                    val_data = json.load(f)
+                    consistency = val_data['validation_results']['regime_consistency'] * 100
+                    confidence = val_data['state_statistics']['mean_confidence'] * 100
+                    print_success(f"Regime Consistency: {consistency:.1f}% | Mean Confidence: {confidence:.1f}%")
+            except Exception as e:
+                print_warning(f"Could not read validation results: {e}")
+        print()
     
     # Save workflow summary
     summary_file = 'workflow_summary.json'
@@ -350,9 +338,8 @@ def run_workflow(symbols: List[str], window_size: int = 252, step_size: int = 21
         print(f"\n  {Colors.BOLD}{symbol}:{Colors.ENDC}")
         if symbol in results['predictions']:
             print(f"    • Predictions: {results['predictions'][symbol]}")
-        if symbol in results['backtests']:
-            for strategy, filepath in results['backtests'][symbol].items():
-                print(f"    • Backtest ({strategy}): {filepath}")
+        if symbol in results['validations']:
+            print(f"    • Validation: {results['validations'][symbol]}")
     
     return results
 
@@ -376,9 +363,6 @@ Examples:
   # Skip ingestion and training (use existing data/models)
   python doit.py --symbols EUR/USD --skip-ingest --skip-train
   
-  # Run only simple backtest strategy
-  python doit.py --symbols EUR/USD --strategies simple
-  
   # Non-interactive mode (no confirmation)
   python doit.py --symbols EUR/USD --yes
         """
@@ -391,10 +375,6 @@ Examples:
                        help='Rolling window step size in days (default: 21)')
     parser.add_argument('--n-states', type=int, default=3,
                        help='Number of HMM states (default: 3)')
-    parser.add_argument('--strategies', nargs='+', 
-                       choices=['simple', 'momentum', 'adaptive'],
-                       default=['simple', 'momentum', 'adaptive'],
-                       help='Backtest strategies to run (default: all)')
     parser.add_argument('--skip-ingest', action='store_true',
                        help='Skip data ingestion (use existing data)')
     parser.add_argument('--skip-train', action='store_true',
@@ -416,7 +396,7 @@ Examples:
     # Confirm parameters
     if not args.yes:
         if not confirm_parameters(symbols, args.window_size, args.step_size, 
-                                  args.n_states, args.strategies):
+                                  args.n_states):
             print_warning("Workflow cancelled by user")
             return
     
@@ -427,7 +407,6 @@ Examples:
             window_size=args.window_size,
             step_size=args.step_size,
             n_states=args.n_states,
-            strategies=args.strategies,
             skip_ingest=args.skip_ingest,
             skip_train=args.skip_train
         )
