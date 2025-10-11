@@ -2,6 +2,22 @@
 
 Complete end-to-end workflow for detecting market regimes using HMM on OHLC data.
 
+## 📚 Documentation
+
+This repository includes three comprehensive LaTeX reports:
+
+1. **`combined_report.tex`** ⭐ **RECOMMENDED** - Complete report combining implemented HMM system with proposed deep learning extensions
+   - **Part I:** Fully implemented HMM system with experimental results
+   - **Part II:** Proposed BiLSTM-Attention architecture for future work
+   - See [COMBINED_REPORT_GUIDE.md](COMBINED_REPORT_GUIDE.md) for details
+
+2. **`report_hmm.tex`** - Focused report on the actual HMM implementation
+   - Use for production system documentation
+   - See [QUICK_START_REPORT.md](QUICK_START_REPORT.md) for details
+
+3. **`main.tex`** - Aspirational hybrid system architecture (reference only)
+   - See [COMPARISON_REPORT.md](COMPARISON_REPORT.md) for differences
+
 ## Features
 
 - Raw OHLC data ingestion with rate limiting and robust error handling
