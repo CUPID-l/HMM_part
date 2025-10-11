@@ -1,10 +1,22 @@
-# Quick Start Guide: Using Your New Report
+# Quick Start Guide: Using Your Reports
 
 ## 📖 Which File to Use?
 
-**For ALL official purposes, use:** `report_hmm.tex`
+### ⭐ RECOMMENDED: `combined_report.tex`
+**Best for:** Complete research vision showing both implemented HMM system and proposed extensions
+- Part I: Complete HMM implementation with real results
+- Part II: Proposed BiLSTM-Attention extensions
+- Clear separation of implemented vs. proposed work
+- See [COMBINED_REPORT_GUIDE.md](COMBINED_REPORT_GUIDE.md) for details
 
-This report accurately documents your actual HMM implementation.
+### Alternative: `report_hmm.tex`
+**Best for:** Focus on implemented work only
+- Production system documentation
+- Job portfolio showing real implementation
+- This report accurately documents your actual HMM implementation
+
+### 🔍 Need Help Deciding?
+See [WHICH_REPORT_TO_USE.md](WHICH_REPORT_TO_USE.md) for a comprehensive decision guide.
 
 ## 🚀 Quick Compilation
 
